@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: prod
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    open-in-view: true
+
+  logging:
+    level:
+      org.hibernate.SQL: debug
