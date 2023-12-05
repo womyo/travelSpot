@@ -5,12 +5,15 @@ import com.travel.travelSpot.domain.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SignUpDto {
 
     @NotBlank(message = "아이디를 입력해주세요")
@@ -30,12 +33,5 @@ public class SignUpDto {
             .password(password)
             .role(Role.USER)
             .build();
-    }
-
-    @Builder
-    public SignUpDto(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
     }
 }

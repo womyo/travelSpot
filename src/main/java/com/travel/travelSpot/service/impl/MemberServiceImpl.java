@@ -46,18 +46,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Transactional
-    public ResponseEntity<TokenDto> login(LoginDto loginDto) {
+    public TokenDto login(LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.createToken(authentication);
+        TokenDto tokenDto = tokenProvider.createToken(authentication);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+//        RefreshToken refreshToken = RefreshToken.builder()
+//            .key(authentication.getName())
+//            .value(tokenDto.getRefreshToken())
+//            .build();
 
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return tokenDto;
     }
 }
