@@ -9,5 +9,5 @@ import org.springframework.http.ResponseEntity;
 public interface MemberService {
     public Long signUp(SignUpDto signUpDto);
 
-    public ResponseEntity<TokenDto> login(LoginDto loginDto);
+    public TokenDto login(LoginDto loginDto);
 }

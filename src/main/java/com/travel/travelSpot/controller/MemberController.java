@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,12 +36,14 @@ public class MemberController {
     }
 
     @PostMapping("/api/v1/login")
-    public ResponseEntity<TokenDto> login(@Valid @RequestBody LoginDto loginDto) {
+    public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
         return memberService.login(loginDto);
     }
 
-    @PostMapping("/test")
+    @GetMapping("/test")
     public String test() {
-        return "success";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getPrincipal().toString();
+        return email;
     }
 }

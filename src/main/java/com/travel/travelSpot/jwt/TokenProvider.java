@@ -1,5 +1,6 @@
 package com.travel.travelSpot.jwt;
 
+import com.travel.travelSpot.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -30,17 +31,21 @@ public class TokenProvider implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String BEARER_TYPE = "Bearer";
 
     private final String secret;
-    private final long tokenValidityInMilliseconds;
+    private final long accessTokenExpireTime;
+    private final long refreshTokenExpireTime;
 
     private Key key;
 
     public TokenProvider(
         @Value("${jwt.secret}") String secret,
-        @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+        @Value("${jwt.access-token-expire-time}") long accessTokenExpireTime,
+        @Value("${jwt.refresh-token-expire-time}") long refreshTokenExpireTime) {
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.accessTokenExpireTime = accessTokenExpireTime;
+        this.refreshTokenExpireTime = refreshTokenExpireTime;
     }
 
     @Override
@@ -49,20 +54,33 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(Authentication authentication) {
+    public TokenDto createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date accessTokenExpiresIn = new Date(now + this.accessTokenExpireTime);
+        Date refreshTokenExpiresIn = new Date(now + this.refreshTokenExpireTime);
 
-        return Jwts.builder()
+        String accessToken = Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
             .signWith(key, SignatureAlgorithm.HS512)
-            .setExpiration(validity)
+            .setExpiration(accessTokenExpiresIn)
             .compact();
+
+        String refreshToken = Jwts.builder()
+            .setExpiration(refreshTokenExpiresIn)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
+
+        return TokenDto.builder()
+            .grantType(BEARER_TYPE)
+            .accessToken(accessToken)
+            .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+            .refresToken(refreshToken)
+            .build();
     }
 
     public Authentication getAuthentication(String token) {
