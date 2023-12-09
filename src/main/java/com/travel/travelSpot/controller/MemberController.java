@@ -6,6 +6,7 @@ import com.travel.travelSpot.dto.SignUpDto;
 import com.travel.travelSpot.dto.TokenDto;
 import com.travel.travelSpot.jwt.TokenProvider;
 import com.travel.travelSpot.service.MemberService;
+import com.travel.travelSpot.service.SpotService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,12 +32,12 @@ public class MemberController {
 
     @PostMapping("/api/v1/signup")
     @ResponseStatus(HttpStatus.OK)
-    public Long signUp(@Valid @RequestBody SignUpDto signUpDto) throws Exception {
+    public Long signUp(@RequestBody @Valid SignUpDto signUpDto) throws Exception {
         return memberService.signUp(signUpDto);
     }
 
     @PostMapping("/api/v1/login")
-    public TokenDto login(@Valid @RequestBody LoginDto loginDto) {
+    public TokenDto login(@RequestBody @Valid LoginDto loginDto) {
         return memberService.login(loginDto);
     }
 

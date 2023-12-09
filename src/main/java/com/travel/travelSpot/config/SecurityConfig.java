@@ -50,7 +50,7 @@ public class SecurityConfig {
 
             .and()
             .authorizeHttpRequests()
-            .requestMatchers("/api/v1/signup", "/api/v1/login").permitAll()
+            .requestMatchers("/api/v1/signup", "/api/v1/login", "/api/v1/similarSpot").permitAll()
             .anyRequest().authenticated()
 
             .and()

@@ -79,7 +79,7 @@ public class TokenProvider implements InitializingBean {
             .grantType(BEARER_TYPE)
             .accessToken(accessToken)
             .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-            .refresToken(refreshToken)
+            .refreshToken(refreshToken)
             .build();
     }
 
