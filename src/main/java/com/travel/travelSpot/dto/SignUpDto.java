@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class SignUpDto {
 
     @NotBlank(message = "아이디를 입력해주세요")
