@@ -4,7 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +37,16 @@ public class Spot {
     @Column(columnDefinition = "TEXT")
     private String keywords;
 
+    @OneToMany(mappedBy = "spot")
+    private List<Rating> ratings = new ArrayList<>();
+
+    public List<Double> getStars() {
+        return ratings.stream()
+            .map(Rating::getStarRating)
+            .collect(Collectors.toList());
+    }
+
+    @Builder
     public Spot(String name, String country, String types, String keywords) {
         this.name = name;
         this.country = country;
