@@ -1,5 +1,6 @@
 package com.travel.travelSpot.service;
 
+import com.travel.travelSpot.domain.Rating;
 import com.travel.travelSpot.domain.Spot;
 import com.travel.travelSpot.dto.SpotResultDto;
 import com.travel.travelSpot.repository.SpotRepository;
@@ -46,7 +47,9 @@ public class SpotService {
             Set<String> spotSet = similarityService.makeSetData(spotMeta);
 
             double jaccard = similarityService.jaccardSimilarity(inputSet, spotSet);
-            double score = (1 - alpha) * jaccard;
+            double pearson = similarityService.pearsonSimilarity(inputMeta.getStars(), spotMeta.getStars());
+
+            double score = alpha * pearson + (1 - alpha) * jaccard;
 
             result.add(new SpotResultDto(spotMeta.getName(), spotMeta.getCountry(), score));
         }
