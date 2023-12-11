@@ -1,5 +1,6 @@
 package com.travel.travelSpot.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class Spot {
     @Column(columnDefinition = "TEXT")
     private String keywords;
 
-    @OneToMany(mappedBy = "spot")
+    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL)
     private List<Rating> ratings = new ArrayList<>();
 
     public List<Double> getStars() {

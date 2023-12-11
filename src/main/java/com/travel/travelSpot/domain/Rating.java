@@ -17,7 +17,7 @@ public class Rating {
 
     @Id
     @GeneratedValue
-    @Column
+    @Column(name = "rating_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -51,7 +51,7 @@ public class SpotService {
 
             double score = alpha * pearson + (1 - alpha) * jaccard;
 
-            result.add(new SpotResultDto(spotMeta.getName(), spotMeta.getCountry(), score));
+            result.add(new SpotResultDto(spotMeta.getId(), spotMeta.getName(), spotMeta.getCountry(), score));
         }
 
         result.sort(Comparator.comparingDouble(SpotResultDto::getScore).reversed());

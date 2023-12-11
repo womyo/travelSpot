@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SpotResultDto {
 
+    private Long id;
     private String name;
     private String country;
     private double score;

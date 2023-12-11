@@ -19,6 +19,6 @@ public class SpotController {
 
     @GetMapping("/api/v1/similarSpot")
     public SpotResultDto similarSpotV1(@RequestBody @Valid SpotDto spotDto) {
-        return spotService.findSimilarSpot(spotDto.getName(), 0.3);
+        return spotService.findSimilarSpot(spotDto.getName(), 0.2);
     }
 }
