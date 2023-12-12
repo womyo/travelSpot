@@ -1,10 +1,12 @@
 package com.travel.travelSpot.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "spots")
 @Getter
 @NoArgsConstructor
 public class Spot {
@@ -37,7 +40,7 @@ public class Spot {
     @Column(columnDefinition = "TEXT")
     private String keywords;
 
-    @OneToMany(mappedBy = "spot")
+    @OneToMany(mappedBy = "spot", cascade = CascadeType.ALL)
     private List<Rating> ratings = new ArrayList<>();
 
     public List<Double> getStars() {

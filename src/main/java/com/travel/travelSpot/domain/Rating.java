@@ -7,17 +7,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "ratings")
 @Getter
 @NoArgsConstructor
 public class Rating {
 
     @Id
     @GeneratedValue
-    @Column
+    @Column(name = "rating_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
