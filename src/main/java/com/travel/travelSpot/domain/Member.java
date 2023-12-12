@@ -10,12 +10,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
@@ -41,6 +43,13 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Heart> hearts = new ArrayList<>();
+
+    public List<String> getHeartedSpots() {
+        return hearts.stream()
+            .filter(heart -> !heart.isDeleted())
+            .map(heart -> heart.getSpot().getName())
+            .collect(Collectors.toList());
+    }
 
     @Builder
     public Member(Long id, String email, String username, String password, Role role) {

@@ -1,5 +1,6 @@
 package com.travel.travelSpot.service.impl;
 
+import com.travel.travelSpot.domain.Heart;
 import com.travel.travelSpot.domain.Member;
 import com.travel.travelSpot.domain.RefreshToken;
 import com.travel.travelSpot.dto.LoginDto;
@@ -9,8 +10,12 @@ import com.travel.travelSpot.jwt.TokenProvider;
 import com.travel.travelSpot.repository.MemberRepository;
 import com.travel.travelSpot.repository.RefreshTokenRepository;
 import com.travel.travelSpot.service.MemberService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -29,6 +34,8 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    private final EntityManager em;
 
     @Transactional
     public Long signUp(SignUpDto signUpDto) {
@@ -62,5 +69,13 @@ public class MemberServiceImpl implements MemberService {
         refreshTokenRepository.save(refreshToken);
 
         return tokenDto;
+    }
+
+    @Transactional
+    public List<String> getUserHeartedSpots(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException(memberId + " -> 멤버 데이터베이스에서 찾을 수 없습니다."));
+        List<String> getHeartedSpots = member.getHeartedSpots();
+
+        return getHeartedSpots;
     }
 }

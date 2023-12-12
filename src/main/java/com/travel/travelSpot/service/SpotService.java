@@ -1,15 +1,14 @@
 package com.travel.travelSpot.service;
 
-import com.travel.travelSpot.domain.Rating;
 import com.travel.travelSpot.domain.Spot;
-import com.travel.travelSpot.dto.SpotResultDto;
+import com.travel.travelSpot.dto.SpotResponseDto;
 import com.travel.travelSpot.repository.SpotRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +26,11 @@ public class SpotService {
     }
 
     @Transactional(readOnly = true)
-    public SpotResultDto findSimilarSpot(String inputName, double alpha) {
-        Spot inputMeta = spotRepository.findByName(inputName);
-
-        if (inputMeta == null) {
-            throw new IllegalArgumentException("Spot is not found. SpotName = " + inputName);
-        }
+    public SpotResponseDto findSimilarSpot(String inputName, double alpha) {
+        Spot inputMeta = spotRepository.findByName(inputName).orElseThrow(() -> new EntityNotFoundException(inputName + " -> 장소 데이터베이스에서 찾을 수 없습니다."));
 
         List<Spot> allSpots = spotRepository.findAll();
-        List<SpotResultDto> result = new ArrayList<>();
+        List<SpotResponseDto> result = new ArrayList<>();
 
         Set<String> inputSet = similarityService.makeSetData(inputMeta);
 
@@ -51,10 +46,10 @@ public class SpotService {
 
             double score = alpha * pearson + (1 - alpha) * jaccard;
 
-            result.add(new SpotResultDto(spotMeta.getId(), spotMeta.getName(), spotMeta.getCountry(), score));
+            result.add(new SpotResponseDto(spotMeta.getId(), spotMeta.getName(), spotMeta.getCountry(), score));
         }
 
-        result.sort(Comparator.comparingDouble(SpotResultDto::getScore).reversed());
+        result.sort(Comparator.comparingDouble(SpotResponseDto::getScore).reversed());
 
         return result.get(0);
     }
