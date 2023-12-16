@@ -9,6 +9,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,8 +46,8 @@ public class TokenProvider implements InitializingBean {
         @Value("${jwt.access-token-expire-time}") long accessTokenExpireTime,
         @Value("${jwt.refresh-token-expire-time}") long refreshTokenExpireTime) {
         this.secret = secret;
-        this.accessTokenExpireTime = accessTokenExpireTime;
-        this.refreshTokenExpireTime = refreshTokenExpireTime;
+        this.accessTokenExpireTime = accessTokenExpireTime * 1000;
+        this.refreshTokenExpireTime = refreshTokenExpireTime * 1000;
     }
 
     @Override
@@ -80,6 +82,7 @@ public class TokenProvider implements InitializingBean {
             .accessToken(accessToken)
             .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
             .refreshToken(refreshToken)
+            .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime())
             .build();
     }
 
@@ -115,5 +118,14 @@ public class TokenProvider implements InitializingBean {
             logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    public Long getExpiration(String token) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(secret)
+            .build().parseClaimsJws(token).getBody().getExpiration();
+
+        long now = (new Date()).getTime();
+
+        return (expiration.getTime() - now);
     }
 }

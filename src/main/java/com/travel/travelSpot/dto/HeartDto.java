@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SpotResponseDto {
+public class HeartDto {
 
-    private Long id;
-    private String name;
-    private String country;
-    private double score;
+    private String result;
 }

@@ -37,10 +37,6 @@ public class Heart {
     @Column
     private boolean deleted; // soft delete
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
     @Builder
     public Heart(Long id, Member member, Spot spot, boolean deleted) {
         this.id = id;
@@ -48,4 +44,9 @@ public class Heart {
         this.spot = spot;
         this.deleted = deleted;
     }
+
+    public void updateDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
 }

@@ -3,14 +3,15 @@ package com.travel.travelSpot.service;
 import com.travel.travelSpot.domain.Heart;
 import com.travel.travelSpot.domain.Member;
 import com.travel.travelSpot.domain.Spot;
-import com.travel.travelSpot.dto.HeartResponseDto;
+import com.travel.travelSpot.dto.HeartDto;
 import com.travel.travelSpot.repository.HeartRepository;
 import com.travel.travelSpot.repository.MemberRepository;
 import com.travel.travelSpot.repository.SpotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,17 @@ public class HeartService {
     private final SpotRepository spotRepository;
 
     @Transactional
-    public HeartResponseDto addHeart(Long memberId, Long spotId) {
+    public HeartDto addHeart(Long spotId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Long memberId = Long.parseLong(authentication.getName());
+
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException(memberId + " -> 멤버 데이터베이스에서 찾을 수 없습니다."));
         Spot spot = spotRepository.findById(spotId).orElseThrow(() -> new EntityNotFoundException(spotId + " -> 장소 데이터베이스에서 찾을 수 없습니다."));
 
         Optional<Heart> existHeart = heartRepository.findByMemberAndSpot(member, spot);
 
-        HeartResponseDto heartResponseDto = new HeartResponseDto();
+        HeartDto heartResponseDto = new HeartDto();
 
         if (existHeart.isPresent()) {
             updateDeleted(existHeart.get());
@@ -44,6 +49,6 @@ public class HeartService {
 
     @Transactional
     public void updateDeleted(Heart heart) {
-        heart.setDeleted(!heart.isDeleted());
+        heart.updateDeleted(!heart.isDeleted());
     }
 }
