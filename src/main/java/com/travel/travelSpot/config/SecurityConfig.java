@@ -4,9 +4,12 @@ import com.travel.travelSpot.jwt.JwtAccessDeniedHandler;
 import com.travel.travelSpot.jwt.JwtAuthenticationEntryPoint;
 import com.travel.travelSpot.jwt.JwtSecurityConfig;
 import com.travel.travelSpot.jwt.TokenProvider;
+import com.travel.travelSpot.repository.RefreshTokenRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -23,6 +26,7 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final RedisTemplate redisTemplate;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -51,11 +55,11 @@ public class SecurityConfig {
 
             .and()
             .authorizeHttpRequests()
-            .requestMatchers("/api/v1/signup", "/api/v1/login", "/api/v1/similarSpot").permitAll()
+            .requestMatchers("/api/v1/signup", "/api/v1/login", "/api/v1/reissue", "/api/v1/similarSpot").permitAll()
             .anyRequest().authenticated()
 
             .and()
-            .apply(new JwtSecurityConfig(tokenProvider));
+            .apply(new JwtSecurityConfig(tokenProvider, redisTemplate));
 
          return http.build();
     }

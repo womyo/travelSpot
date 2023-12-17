@@ -1,7 +1,7 @@
 package com.travel.travelSpot.service;
 
 import com.travel.travelSpot.domain.Spot;
-import com.travel.travelSpot.dto.SpotResponseDto;
+import com.travel.travelSpot.dto.SpotDto;
 import com.travel.travelSpot.repository.SpotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -26,11 +26,11 @@ public class SpotService {
     }
 
     @Transactional(readOnly = true)
-    public SpotResponseDto findSimilarSpot(String inputName, double alpha) {
+    public SpotDto findSimilarSpot(String inputName, double alpha) {
         Spot inputMeta = spotRepository.findByName(inputName).orElseThrow(() -> new EntityNotFoundException(inputName + " -> 장소 데이터베이스에서 찾을 수 없습니다."));
 
         List<Spot> allSpots = spotRepository.findAll();
-        List<SpotResponseDto> result = new ArrayList<>();
+        List<SpotDto> result = new ArrayList<>();
 
         Set<String> inputSet = similarityService.makeSetData(inputMeta);
 
@@ -46,10 +46,10 @@ public class SpotService {
 
             double score = alpha * pearson + (1 - alpha) * jaccard;
 
-            result.add(new SpotResponseDto(spotMeta.getId(), spotMeta.getName(), spotMeta.getCountry(), score));
+            result.add(new SpotDto(spotMeta.getId(), spotMeta.getName(), spotMeta.getCountry(), score));
         }
 
-        result.sort(Comparator.comparingDouble(SpotResponseDto::getScore).reversed());
+        result.sort(Comparator.comparingDouble(SpotDto::getScore).reversed());
 
         return result.get(0);
     }
