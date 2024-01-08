@@ -4,8 +4,6 @@ import com.travel.travelSpot.jwt.JwtAccessDeniedHandler;
 import com.travel.travelSpot.jwt.JwtAuthenticationEntryPoint;
 import com.travel.travelSpot.jwt.JwtSecurityConfig;
 import com.travel.travelSpot.jwt.TokenProvider;
-import com.travel.travelSpot.repository.RefreshTokenRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

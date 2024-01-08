@@ -27,6 +27,7 @@ public class SignUpDto {
     @Size(min = 3, max = 100)
     private String password;
 
+    // DTO to Entity
     public Member toEntity() {
         return Member.builder()
             .email(email)
