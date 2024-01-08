@@ -43,7 +43,6 @@ public class MemberController {
 
         createCookie(response, tokenDto.getRefreshToken(), "refresh", refreshTokenExpireTime);
 
-
         return tokenDto;
     }
 

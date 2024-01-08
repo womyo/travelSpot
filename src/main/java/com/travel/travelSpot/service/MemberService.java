@@ -1,14 +1,12 @@
 package com.travel.travelSpot.service;
 
 import com.travel.travelSpot.domain.Member;
-import com.travel.travelSpot.domain.RefreshToken;
 import com.travel.travelSpot.dto.LoginDto;
 import com.travel.travelSpot.dto.SignUpDto;
 import com.travel.travelSpot.dto.TokenDto;
 import com.travel.travelSpot.dto.TokenRequestDto;
 import com.travel.travelSpot.jwt.TokenProvider;
 import com.travel.travelSpot.repository.MemberRepository;
-import com.travel.travelSpot.repository.RefreshTokenRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +28,6 @@ import org.springframework.util.ObjectUtils;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
